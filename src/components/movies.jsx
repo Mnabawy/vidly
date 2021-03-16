@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { getMovies } from '../services/fakeMovieService';
+import Like from "./common/like";
+
 
 class Movies extends Component {
 
@@ -8,10 +10,23 @@ class Movies extends Component {
    }
 
    handleDelete = (movie) => {
-
       let movies = this.state.movies;
       let filteredMovies = movies.filter(m => m._id !== movie._id);
       this.setState({ movies: filteredMovies })
+   }
+
+
+   handleLike = (movie) => {
+      // we need to modify the movies list 
+      // create copy of the movies list
+      let movies = [...this.state.movies];
+      // find the index of the target movie 
+      let index = movies.indexOf(movie);
+      // clone the target movie object into new object
+      movies[index] = { ...movies[index] }
+      // simply toggle the boolean liked prop 
+      movies[index].liked = !movies[index].liked
+      this.setState({ movies: movies });
    }
 
    render() {
@@ -24,11 +39,12 @@ class Movies extends Component {
             <table className="table">
                <thead style={{ textAlign: "left" }}>
                   <tr>
-                     <th scope="col">Title</th>
-                     <th scope="col">Genre</th>
-                     <th scope="col">Stock</th>
-                     <th scope="col">Rate</th>
-                     <th scope="col"></th>
+                     <th>Title</th>
+                     <th>Genre</th>
+                     <th>Stock</th>
+                     <th>Rate</th>
+                     <th />
+                     <th />
                   </tr>
                </thead>
                <tbody style={{ textAlign: "left" }}>
@@ -39,9 +55,17 @@ class Movies extends Component {
                            <td>{movie.genre.name}</td>
                            <td>{movie.numberInStock}</td>
                            <td>{movie.dailyRentalRate}</td>
-                           <button className="btn btn-danger m-2" onClick={
-                              () => this.handleDelete(movie)
-                           }>Delete</button>
+                           <td>
+                              <Like
+                                 liked={movie.liked}
+                                 onClick={() => this.handleLike(movie)}
+                              />
+                           </td>
+                           <td>
+                              <button className="btn btn-danger m-2" onClick={
+                                 () => this.handleDelete(movie)
+                              }>Delete</button>
+                           </td>
                         </tr>
                      )
                   })}
