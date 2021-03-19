@@ -2,7 +2,43 @@ import * as genresAPI from "./fakeGenreService";
 
 const movies = [
   {
-    _id: "5b21ca3eeb7f6fbccd471815",
+    _id: "5b21ca3eeb7f6fbccd4718151",
+    title: "Terminator",
+    genre: { _id: "5b21ca3eeb7f6fbccd471818", name: "Action" },
+    numberInStock: 6,
+    dailyRentalRate: 2.5,
+    publishDate: "2018-01-03T19:04:28.809Z",
+    liked:false
+  },
+  {
+    _id: "5b21ca3eeb7f6fbccd4718152",
+    title: "Terminator",
+    genre: { _id: "5b21ca3eeb7f6fbccd471818", name: "Action" },
+    numberInStock: 6,
+    dailyRentalRate: 2.5,
+    publishDate: "2018-01-03T19:04:28.809Z",
+    liked:false
+  },
+  {
+    _id: "5b21ca3eeb7f6fbccd4718153",
+    title: "Terminator",
+    genre: { _id: "5b21ca3eeb7f6fbccd471818", name: "Action" },
+    numberInStock: 6,
+    dailyRentalRate: 2.5,
+    publishDate: "2018-01-03T19:04:28.809Z",
+    liked:false
+  },
+  {
+    _id: "5b21ca3eeb7f6fbccd4718154",
+    title: "Terminator",
+    genre: { _id: "5b21ca3eeb7f6fbccd471818", name: "Action" },
+    numberInStock: 6,
+    dailyRentalRate: 2.5,
+    publishDate: "2018-01-03T19:04:28.809Z",
+    liked:false
+  },
+  {
+    _id: "5b21ca3eeb7f6fbccd4718155",
     title: "Terminator",
     genre: { _id: "5b21ca3eeb7f6fbccd471818", name: "Action" },
     numberInStock: 6,
