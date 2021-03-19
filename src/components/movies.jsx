@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { getMovies } from "../services/fakeMovieService";
 import Like from "./common/like";
+import Pagination from "./paginatoin";
 // import Pagination from "./paginatoin";
 
 class Movies extends Component {
@@ -73,20 +74,6 @@ class Movies extends Component {
       pageNumbers.push(i);
     }
 
-    const renderPageNumbers = pageNumbers.map((number, index) => {
-      return (
-        <li
-          className="page-link"
-          key={number}
-          id={number}
-          onClick={this.handlePagination}
-        >
-            {number}
- 
-        </li>
-      );
-    });
-
     if (count === 0) return "there is no movies in the database";
 
     return (
@@ -105,9 +92,7 @@ class Movies extends Component {
           </thead>
           <tbody style={{ textAlign: "left" }}>{renderMovies}</tbody>
         </table>
-        <nav aria-label="...">
-          <ul className="pagination pagination-lg">{renderPageNumbers}</ul>
-        </nav>
+        <Pagination handlePagination={this.handlePagination} />
       </div>
     );
   }
