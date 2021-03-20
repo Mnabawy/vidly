@@ -1,14 +1,14 @@
 import React, { Component } from "react";
 import { getMovies } from "../services/fakeMovieService";
 import Like from "./common/like";
-import Pagination from "./paginatoin";
-// import Pagination from "./paginatoin";
+import Pagination from "./common/paginatoin";
+import { paginate } from "../utils/paginate";
 
 class Movies extends Component {
   state = {
     movies: getMovies(),
     currentPage: 1,
-    moviesPerPage: 3,
+    pageSize: 4,
   };
 
   handleDelete = (movie) => {
@@ -18,61 +18,27 @@ class Movies extends Component {
   };
 
   handleLike = (movie) => {
-    // we need to modify the movies list
-    // create copy of the movies list
     let movies = [...this.state.movies];
-    // find the index of the target movie
     let index = movies.indexOf(movie);
-    // clone the target movie object into new object
     movies[index] = { ...movies[index] };
-    // simply toggle the boolean liked prop
     movies[index].liked = !movies[index].liked;
     this.setState({ movies: movies });
   };
 
-  handlePagination = (event) => {
-    console.log(event.target);
-    this.setState({
-      currentPage: Number(event.target.id),
-    });
+  handlePageChange = (page) => {
+    this.setState({ currentPage: page });
   };
 
   render() {
-    const { movies, currentPage, moviesPerPage } = this.state;
+    const {
+      movies: moviesList,
+      pageSize,
+      currentPage,
+      moviesPerPage,
+    } = this.state;
     const { length: count } = this.state.movies;
 
-    // logic for displaying current movies
-    const indexOfLastMovie = currentPage * moviesPerPage;
-    const indexOfFirstMovie = indexOfLastMovie - moviesPerPage;
-    const currentMovies = movies.slice(indexOfFirstMovie, indexOfLastMovie);
-
-    const renderMovies = currentMovies.map((movie, index) => {
-      return (
-        <tr key={index}>
-          <td style={{ textAlign: "left" }}>{movie.title}</td>
-          <td>{movie.genre.name}</td>
-          <td>{movie.numberInStock}</td>
-          <td>{movie.dailyRentalRate}</td>
-          <td>
-            <Like liked={movie.liked} onClick={() => this.handleLike(movie)} />
-          </td>
-          <td>
-            <button
-              className="btn btn-danger m-2"
-              onClick={() => this.handleDelete(movie)}
-            >
-              Delete
-            </button>
-          </td>
-        </tr>
-      );
-    });
-
-    // logic for displayin page number
-    const pageNumbers = [];
-    for (let i = 1; i <= Math.ceil(movies.length / moviesPerPage); i++) {
-      pageNumbers.push(i);
-    }
+    const movies = paginate(moviesList, currentPage, pageSize);
 
     if (count === 0) return "there is no movies in the database";
 
@@ -90,9 +56,39 @@ class Movies extends Component {
               <th />
             </tr>
           </thead>
-          <tbody style={{ textAlign: "left" }}>{renderMovies}</tbody>
+          <tbody style={{ textAlign: "left" }}>
+            {movies.map((movie, index) => {
+              return (
+                <tr key={index}>
+                  <td style={{ textAlign: "left" }}>{movie.title}</td>
+                  <td>{movie.genre.name}</td>
+                  <td>{movie.numberInStock}</td>
+                  <td>{movie.dailyRentalRate}</td>
+                  <td>
+                    <Like
+                      liked={movie.liked}
+                      onClick={() => this.handleLike(movie)}
+                    />
+                  </td>
+                  <td>
+                    <button
+                      className="btn btn-danger m-2"
+                      onClick={() => this.handleDelete(movie)}
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
         </table>
-        <Pagination handlePagination={this.handlePagination} />
+        <Pagination
+          currentPage={currentPage}
+          itemsCount={count}
+          pageSize={pageSize}
+          onPageChange={this.handlePageChange}
+        />
       </div>
     );
   }
