@@ -1,11 +1,11 @@
 import React, { Component } from "react";
 import { getMovies } from "../services/fakeMovieService";
 import { getGenres } from "../services/fakeGenreService";
-import Like from "./common/like";
 import Pagination from "./common/paginatoin";
 import { paginate } from "../utils/paginate";
 import ListGroup from "./common/listGroup";
 import _ from "lodash";
+import MoviesTable from "./moviesTable";
 
 class Movies extends Component {
   state = {
@@ -13,10 +13,11 @@ class Movies extends Component {
     genres: [],
     currentPage: 1,
     pageSize: 4,
+    sortColumn: { path: "title", order: "asc" },
   };
 
   componentDidMount() {
-    const genres = [{ name: "All Genres" }, ...getGenres()];
+    const genres = [{ _id: "", name: "All Genres" }, ...getGenres()];
     this.setState({ movies: getMovies(), genres });
   }
 
@@ -39,7 +40,11 @@ class Movies extends Component {
   };
 
   handleGenreSelect = (genre) => {
-    this.setState({currentPage:1, selectedGenre: genre });
+    this.setState({ currentPage: 1, selectedGenre: genre });
+  };
+
+  handleSort = (sortColumn) => {
+    this.setState({ sortColumn });
   };
 
   render() {
@@ -49,6 +54,7 @@ class Movies extends Component {
       pageSize,
       currentPage,
       selectedGenre,
+      sortColumn,
     } = this.state;
 
     if (count === 0) return "there is no movies in the database";
@@ -58,7 +64,13 @@ class Movies extends Component {
         ? moviesList.filter((movie) => movie.genre._id === selectedGenre._id)
         : moviesList;
 
-    const movies = paginate(filetred, currentPage, pageSize);
+    const sortedList = _.orderBy(
+      filetred,
+      [sortColumn.path],
+      [sortColumn.order]
+    );
+
+    const movies = paginate(sortedList, currentPage, pageSize);
 
     return (
       <div className="container mt-4">
@@ -72,44 +84,13 @@ class Movies extends Component {
           </div>
           <div className="col-sm-12 col-md-9">
             <h1>showing {count} movies in the database</h1>
-            <table className="table">
-              <thead style={{ textAlign: "left" }}>
-                <tr>
-                  <th>Title</th>
-                  <th>Genre</th>
-                  <th>Stock</th>
-                  <th>Rate</th>
-                  <th />
-                  <th />
-                </tr>
-              </thead>
-              <tbody style={{ textAlign: "left" }}>
-                {movies.map((movie, index) => {
-                  return (
-                    <tr key={index}>
-                      <td style={{ textAlign: "left" }}>{movie.title}</td>
-                      <td>{movie.genre.name}</td>
-                      <td>{movie.numberInStock}</td>
-                      <td>{movie.dailyRentalRate}</td>
-                      <td>
-                        <Like
-                          liked={movie.liked}
-                          onClick={() => this.handleLike(movie)}
-                        />
-                      </td>
-                      <td>
-                        <button
-                          className="btn btn-danger"
-                          onClick={() => this.handleDelete(movie)}
-                        >
-                          Delete
-                        </button>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+            <MoviesTable
+              movies={movies}
+              sortColumn={sortColumn}
+              onLike={this.handleLike}
+              onDelete={this.handleDelete}
+              onSort={this.handleSort}
+            />
             <Pagination
               currentPage={currentPage}
               itemsCount={filetred.length}
