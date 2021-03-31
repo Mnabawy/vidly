@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import Input from "./input";
 
 class LoginForm extends Component {
   state = {
@@ -6,58 +7,56 @@ class LoginForm extends Component {
       email: "",
       password: "",
     },
+    errors: {},
   };
 
-  email = React.createRef();
-  password = React.createRef();
+  validate = () => {
+    //* create an empty obj
+    //* check every input element
+    //* modify the state's error key
+    let { account } = this.state;
+    let errors = {};
+    if (account.email.trim() === "") errors.email = "email is required";
+    if (account.password.trim() === "")
+      errors.password = "password is required";
+    return Object.keys(errors).length === 0 ? null : errors;
+    //!  when errors = {} in that case validate func will return null
+  };
 
   handleSubmit = (e) => {
     e.preventDefault();
-    // let username = this.email.current.value;
-    // let pasword = this.password.current.value;
-
-    // console.log(`username : ${username} \npasword : ${pasword}`);
+    let errors = this.validate();
+    this.setState({ errors: errors || {} });
+    if (errors) return;
   };
 
-  handleChange = ({currentTarget}) => {
+  handleChange = ({ currentTarget }) => {
     let account = { ...this.state.account };
     account[currentTarget.name] = currentTarget.value;
     this.setState({ account: account });
   };
+
   render() {
-      const {account } = this.state
+    const { account, errors } = this.state;
     return (
       <>
         <h1>Login Form</h1>
         <form onSubmit={this.handleSubmit}>
-          <div className="form-group">
-            <label htmlFor="Email1">Email address</label>
-            <input
-              autoFocus
-              value={account.email}
-              name="email"
-              onChange={this.handleChange}
-              ref={this.username}
-              type="email"
-              className="form-control"
-              id="Email1"
-              placeholder="Enter email"
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="Password">Password</label>
-            <input
-              name="password"
-              value={account.passwod}
-              onChange={this.handleChange}
-              ref={this.password}
-              type="password"
-              className="form-control"
-              id="Password"
-              placeholder="Password"
-            />
-          </div>
-
+          <Input
+            name="email"
+            handleChange={this.handleChange}
+            label="Email"
+            value={account.email}
+            errors={errors.email}
+            type="email"
+          />
+          <Input
+            name="password"
+            handleChange={this.handleChange}
+            label="Password"
+            value={account.password}
+            errors={errors.password}
+          />
           <button type="submit" className="btn btn-primary">
             Submit
           </button>
