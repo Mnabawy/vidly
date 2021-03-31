@@ -5,6 +5,7 @@ import App from "./App";
 import "bootstrap/dist/css/bootstrap.css";
 import "font-awesome/css/font-awesome.css";
 import { BrowserRouter as Router } from "react-router-dom";
+import "bootstrap";
 
 ReactDOM.render(
   <React.StrictMode>

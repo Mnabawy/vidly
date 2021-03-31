@@ -12,6 +12,8 @@ import Rentals from "../src/components/rentals";
 import Customers from "../src/components/customers";
 import NotFound from "../src/components/notfound";
 import MovieForm from "../src/components/movieForm";
+import LoginForm from "./components/loginForm";
+import "./App.css";
 
 function App() {
   return (
@@ -19,6 +21,7 @@ function App() {
       <NabBar />
       <div className="container">
         <Switch>
+          <Route path="/login" component={LoginForm} />
           <Route path="/movies/:id" component={MovieForm} />
           <Route path="/movies" component={Movies} />
           <Route path="/customers" component={Customers} />
