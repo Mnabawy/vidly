@@ -1,4 +1,5 @@
 import React from "react";
+
 import {
   NavLink,
   BrowserRouter as Router,
@@ -15,7 +16,7 @@ import MovieForm from "../movieForm";
 
 const NabBar = () => {
   return (
-    <Router>
+    <>
       <nav className="navbar navbar-expand-lg navbar-light bg-light">
         <NavLink to="/" className="navbar-brand">
           Vidly
@@ -31,45 +32,23 @@ const NabBar = () => {
         >
           <span className="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse">
-          <ul className="navbar-nav">
-            <li className="nav-item">
-              <NavLink className="nav-link" to="/">
-                Movies
-              </NavLink>
-            </li>
+        <div class="collapse navbar-collapse" id="navbarNavdasdsa">
+          <div className="navbar-nav">
+            <NavLink className="nav-item nav-link" to="/movies">
+              Movies
+            </NavLink>
+            <NavLink className="nav-item nav-link" to="/customers">
+              Customers
+            </NavLink>
 
-            <li className="nav-item">
-              <NavLink className="nav-link" to="/customers">
-                Customers
-              </NavLink>
-            </li>
 
-            <li className="nav-item">
-              <NavLink className="nav-link" to="/rentals">
-                Rentals
-              </NavLink>
-            </li>
-          </ul>
+            <NavLink className="nav-item nav-link" to="/rentals">
+              Rentals
+            </NavLink>
+          </div>
         </div>
       </nav>
-
-      <Switch>
-        <Route path="/movies" component={Movies} />
-        <Route path="/customers" component={Customers} />
-        <Route path="/rentals" component={Rentals} />
-        <Route path="/not-found" component={NotFound} />
-        <Route path="/:id" component={MovieForm} />
-
-        <Route exact path="/">
-          <Redirect to="/movies" />
-        </Route>
-
-        <Route path="*">
-          <Redirect to="/not-found" />
-        </Route>
-      </Switch>
-    </Router>
+    </>
   );
 };
 

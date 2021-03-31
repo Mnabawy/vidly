@@ -1,14 +1,15 @@
 import React from "react";
-import { useParams, useHistory } from "react-router-dom";
 
-const MovieForm = (props) => {
-  let { id } = useParams();
-  let {replace} = useHistory();
+const MovieForm = ({ match, history }) => {
   return (
     <>
-      <h1>Movie Form Id {id}</h1>
-
-      <button onClick={() => replace('/movies')}>Save</button>
+      <h1>Movie Form Id {match.params.id}</h1>
+      <button
+        onClick={() => history.replace("/movies")}
+        className="btn btn-primary"
+      >
+        Save
+      </button>
     </>
   );
 };

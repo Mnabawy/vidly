@@ -5,9 +5,6 @@ import { Link } from "react-router-dom";
 class TableBody extends Component {
   renderCell = (item, column) => {
     if (column.content) return column.content(item);
-    if (item.title) {
-      item.title = <Link to={`/:${item._id}`}> {item.title} </Link>;
-    }
     return _.get(item, column.path);
   };
 
