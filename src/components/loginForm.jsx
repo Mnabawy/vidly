@@ -25,15 +25,34 @@ class LoginForm extends Component {
 
   handleSubmit = (e) => {
     e.preventDefault();
+
     let errors = this.validate();
     this.setState({ errors: errors || {} });
     if (errors) return;
+
+    // call the server
+    console.log("submitted");
   };
 
-  handleChange = ({ currentTarget }) => {
+  validateProperty = ({ name, value }) => {
+    if (name === "email") {
+      if (value.trim() === "") return "email is required.";
+    }
+    if (name === "password") {
+      if (value.trim() === "") return "password is required.";
+    }
+  };
+
+  handleChange = ({ currentTarget: input }) => {
+    let errors = { ...this.state.errors };
+    let errorMessage = this.validateProperty(input);
+
+    if (errorMessage) errors[input.name] = errorMessage;
+    else delete errors[input.name];
+
     let account = { ...this.state.account };
-    account[currentTarget.name] = currentTarget.value;
-    this.setState({ account: account });
+    account[input.name] = input.value;
+    this.setState({ account, errors });
   };
 
   render() {
@@ -56,6 +75,7 @@ class LoginForm extends Component {
             label="Password"
             value={account.password}
             errors={errors.password}
+            type="password"
           />
           <button type="submit" className="btn btn-primary">
             Submit
