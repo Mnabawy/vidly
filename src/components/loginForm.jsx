@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import Input from "./input";
+import Joi from "joi-browser";
 
 class LoginForm extends Component {
   state = {
@@ -10,17 +11,29 @@ class LoginForm extends Component {
     errors: {},
   };
 
+  schema = {
+    email: Joi.string().required().label("Email"),
+    password: Joi.string().required().label("Password"),
+  };
+
   validate = () => {
-    //* create an empty obj
-    //* check every input element
-    //* modify the state's error key
-    let { account } = this.state;
+    const options = {
+      abortEarly: false,
+    };
+    const { error } = Joi.validate(this.state.account, this.schema, options);
+    if (!error) return null;
+
     let errors = {};
-    if (account.email.trim() === "") errors.email = "email is required";
-    if (account.password.trim() === "")
-      errors.password = "password is required";
-    return Object.keys(errors).length === 0 ? null : errors;
-    //!  when errors = {} in that case validate func will return null
+    error.details.map((item) => (errors[item.path[0]] = item.message));
+    return errors;
+  };
+
+  validateProperty = ({ name, value }) => {
+    const obj = { [name]: value };
+    const schema = { [name]: this.schema[name] };
+    const { error } = Joi.validate(obj, schema);
+    return error ? error.details[0].message : null;
+    // console.log(error);
   };
 
   handleSubmit = (e) => {
@@ -32,15 +45,6 @@ class LoginForm extends Component {
 
     // call the server
     console.log("submitted");
-  };
-
-  validateProperty = ({ name, value }) => {
-    if (name === "email") {
-      if (value.trim() === "") return "email is required.";
-    }
-    if (name === "password") {
-      if (value.trim() === "") return "password is required.";
-    }
   };
 
   handleChange = ({ currentTarget: input }) => {
